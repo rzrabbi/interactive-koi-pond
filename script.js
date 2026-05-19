@@ -13,10 +13,18 @@ let config = {
     rippleStrength: 1.0
 };
 
+const FOOD_DETECT_RADIUS_SQ = 90000;
+const EAT_RADIUS_SQ = 400;
+const FEAR_RADIUS_SQ = 40000;
+
 let width, height;
 function resize() {
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
+    let dpr = window.devicePixelRatio || 1;
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    ctx.scale(dpr, dpr);
 }
 window.addEventListener('resize', resize);
 resize();
@@ -79,36 +87,9 @@ window.wallpaperPropertyListener = {
     }
 };
 
-function livelyPropertyListener(name, val) {
-    if (name === "fishCount") {
-        config.fishCount = val;
-        syncKois();
-    } else if (name === "waterHue") {
-        config.waterHue = val;
-        document.body.style.backgroundColor = `hsl(${config.waterHue}, 75%, 18%)`;
-    } else if (name === "fishSpeed") {
-        config.fishSpeed = val;
-    } else if (name === "enableCaustics") {
-        config.enableCaustics = val;
-    } else if (name === "enableFeeding") {
-        config.enableFeeding = val;
-    } else if (name === "shyFish") {
-        config.shyFish = val;
-    } else if (name === "fishTheme") {
-        config.fishTheme = val;
-        kois.forEach(k => k.updateColorTheme());
-    } else if (name === "fishSize") {
-        config.fishSize = val;
-    } else if (name === "rippleStrength") {
-        config.rippleStrength = val;
-    }
-}
 
-function distance(a, b) {
-    let dx = a.x - b.x;
-    let dy = a.y - b.y;
-    return Math.sqrt(dx * dx + dy * dy);
-}
+
+
 
 function distanceSq(a, b) {
     let dx = a.x - b.x;
@@ -127,9 +108,10 @@ class Ripple {
         this.maxRadius = power * 100;
         this.life = 1;
     }
-    update() {
-        this.radius += 1 * this.power;
-        this.life -= 0.01;
+    update(dt) {
+        let dtMult = dt * 60;
+        this.radius += 1 * this.power * dtMult;
+        this.life -= 0.01 * dtMult;
     }
     draw(ctx) {
         ctx.beginPath();
@@ -147,8 +129,9 @@ class Food {
         this.radius = 3;
         this.life = 1000;
     }
-    update() {
-        this.life--;
+    update(dt) {
+        let dtMult = dt * 60;
+        this.life -= 1 * dtMult;
     }
     draw(ctx) {
         ctx.beginPath();
@@ -195,8 +178,9 @@ class Koi {
         this.color = colors[Math.floor(Math.random() * colors.length)];
     }
 
-    update() {
-        if (this.fedTimer > 0) this.fedTimer--;
+    update(dt) {
+        let dtMult = dt * 60;
+        if (this.fedTimer > 0) this.fedTimer -= dtMult;
 
         let target = null;
         let minDistSq = Infinity;
@@ -212,7 +196,7 @@ class Koi {
         let effectiveBaseSpeed = this.baseSpeed * config.fishSpeed;
         let avoidForceApplied = false;
 
-        if (target && minDistSq < 90000) {
+        if (target && minDistSq < FOOD_DETECT_RADIUS_SQ) {
             let truedirX = target.x - this.x;
             let truedirY = target.y - this.y;
             let dirLen = Math.sqrt(truedirX * truedirX + truedirY * truedirY);
@@ -224,7 +208,7 @@ class Koi {
                 ay = (desiredY - this.vy) * this.maxForce * 2;
             }
             
-            if (minDistSq < 400) {
+            if (minDistSq < EAT_RADIUS_SQ) {
                 foods.splice(foods.indexOf(target), 1);
                 ripples.push(new Ripple(this.x, this.y, 0.8 * config.rippleStrength));
                 this.fedTimer = 180;
@@ -232,7 +216,7 @@ class Koi {
         } else {
             if (this.fedTimer <= 0 && config.shyFish && mouse.active) {
                 let dMouseSq = distanceSq(this, mouse);
-                if (dMouseSq < 40000) {
+                if (dMouseSq < FEAR_RADIUS_SQ) {
                     let avoidX = this.x - mouse.x;
                     let avoidY = this.y - mouse.y;
                     let avoidLen = Math.sqrt(avoidX * avoidX + avoidY * avoidY);
@@ -249,7 +233,7 @@ class Koi {
             }
             
             if (!avoidForceApplied) {
-                let wanderAngle = (Math.random() - 0.5) * 0.5;
+                let wanderAngle = (Math.random() - 0.5) * 0.5 * dtMult;
                 let curAngle = Math.atan2(this.vy, this.vx) + wanderAngle;
                 
                 this.vx = Math.cos(curAngle) * effectiveBaseSpeed;
@@ -260,7 +244,7 @@ class Koi {
         let margin = 100;
         let turn = 0.1;
         
-        if (target && minDistSq < 90000) {
+        if (target && minDistSq < FOOD_DETECT_RADIUS_SQ) {
             margin = 0;
         }
 
@@ -269,14 +253,20 @@ class Koi {
         if (this.y < margin) ay += turn;
         if (this.y > height - margin) ay -= turn;
 
-        this.vx += ax;
-        this.vy += ay;
+        // Hard boundary push for extreme resizes
+        if (this.x < -150) this.x = -150;
+        if (this.x > width + 150) this.x = width + 150;
+        if (this.y < -150) this.y = -150;
+        if (this.y > height + 150) this.y = height + 150;
+
+        this.vx += ax * dtMult;
+        this.vy += ay * dtMult;
 
         let speedSquared = this.vx * this.vx + this.vy * this.vy;
         let cSpeed = Math.sqrt(speedSquared);
         
         let currentMax = effectiveBaseSpeed;
-        if (target && minDistSq < 90000) {
+        if (target && minDistSq < FOOD_DETECT_RADIUS_SQ) {
             currentMax = effectiveBaseSpeed * 2;
         } else if (avoidForceApplied) {
             currentMax = effectiveBaseSpeed * 2.5;
@@ -287,10 +277,10 @@ class Koi {
             this.vy = (this.vy / cSpeed) * currentMax;
         }
 
-        this.x += this.vx;
-        this.y += this.vy;
+        this.x += this.vx * dtMult;
+        this.y += this.vy * dtMult;
         
-        this.swimCycle += cSpeed * 0.1;
+        this.swimCycle += cSpeed * 0.1 * dtMult;
         let wiggle = Math.sin(this.swimCycle) * 0.2;
 
         this.angle = Math.atan2(this.vy, this.vx) + wiggle;
@@ -410,24 +400,33 @@ function drawCaustics() {
     ctx.globalCompositeOperation = 'source-over';
 }
 
-function render() {
+let lastTime = performance.now();
+
+function render(currentTime) {
+    if (!currentTime) currentTime = performance.now();
+    let dt = (currentTime - lastTime) / 1000;
+    lastTime = currentTime;
+    
+    // Cap dt to prevent massive jumps if tab is inactive
+    if (dt > 0.1) dt = 0.1;
+
     ctx.clearRect(0, 0, width, height);
 
     if (config.enableCaustics) drawCaustics();
 
     for (let i = foods.length - 1; i >= 0; i--) {
-        foods[i].update();
+        foods[i].update(dt);
         foods[i].draw(ctx);
         if (foods[i].life <= 0) foods.splice(i, 1);
     }
 
     for (let fish of kois) {
-        fish.update();
+        fish.update(dt);
         fish.draw(ctx);
     }
     
     for (let i = ripples.length - 1; i >= 0; i--) {
-        ripples[i].update();
+        ripples[i].update(dt);
         ripples[i].draw(ctx);
         if (ripples[i].life <= 0) ripples.splice(i, 1);
     }
@@ -435,7 +434,7 @@ function render() {
     requestAnimationFrame(render);
 }
 
-render();
+requestAnimationFrame(render);
 
 // Lively Wallpaper Support
 function livelyPropertyListener(name, val) {
