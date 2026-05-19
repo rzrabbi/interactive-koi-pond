@@ -4,7 +4,7 @@ const ctx = canvas.getContext('2d');
 let config = {
     fishCount: 15,
     waterHue: 195,
-    fishSpeed: 1.0,
+    fishSpeed: 1.5,
     enableCaustics: true,
     enableFeeding: true,
     shyFish: true,
@@ -32,6 +32,7 @@ resize();
 let kois = [];
 let foods = [];
 let ripples = [];
+let causticTime = 0;
 
 let mouse = { x: null, y: null, active: false };
 window.addEventListener('mousemove', (e) => {
@@ -134,12 +135,12 @@ class Food {
         this.life -= 1 * dtMult;
     }
     draw(ctx) {
+        ctx.shadowBlur = 5;
+        ctx.shadowColor = 'rgba(0,0,0,0.5)';
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         ctx.fillStyle = '#f4a460';
         ctx.fill();
-        ctx.shadowBlur = 5;
-        ctx.shadowColor = 'rgba(0,0,0,0.5)';
         ctx.shadowBlur = 0;
     }
 }
@@ -305,9 +306,6 @@ class Koi {
     }
 
     draw(ctx) {
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-
         ctx.shadowBlur = 15 * config.fishSize;
         ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
         ctx.shadowOffsetX = 10 * config.fishSize;
@@ -386,10 +384,11 @@ function syncKois() {
 
 syncKois();
 
-function drawCaustics() {
+function drawCaustics(dt) {
     ctx.globalCompositeOperation = 'overlay';
     ctx.fillStyle = 'rgba(255,255,255,0.03)';
-    let time = Date.now() * 0.0003 * config.fishSpeed;
+    causticTime += dt * 0.3 * config.fishSpeed;
+    let time = causticTime;
     for (let i = 0; i < 5; i++) {
         ctx.beginPath();
         let lx = (Math.sin(time + i) * 200) + width / 2;
@@ -412,7 +411,10 @@ function render(currentTime) {
 
     ctx.clearRect(0, 0, width, height);
 
-    if (config.enableCaustics) drawCaustics();
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    if (config.enableCaustics) drawCaustics(dt);
 
     for (let i = foods.length - 1; i >= 0; i--) {
         foods[i].update(dt);

@@ -50,7 +50,7 @@
 				"order" : 103,
 				"text" : "Fish Speed Multiplier",
 				"type" : "slider",
-				"value" : 1
+				"value" : 1.5
 			},
 			"fishTheme" : 
 			{

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Koi Pond - Live Demo</title>
+    <!-- Load Core Wallpaper Engine Styles from parent folder -->
+    <link rel="stylesheet" href="../style.css">
+    <!-- Load Demo UI Styles -->
+    <link rel="stylesheet" href="demo.css">
+</head>
+<body>
+    <!-- Background Canvas from Core Code -->
+    <div id="vignette"></div>
+    <canvas id="wallpaper-canvas"></canvas>
+
+    <!-- UI Overlay Panel -->
+    <div id="ui-panel">
+        <div class="panel-header">
+            <h2>Koi Pond Settings</h2>
+            <div class="header-buttons">
+                <button id="reset-btn" title="Reset to Defaults">↺</button>
+                <button id="minimize-btn" title="Minimize Panel">−</button>
+                <button id="fullscreen-btn" title="Toggle Fullscreen">⛶</button>
+            </div>
+        </div>
+        <div id="panel-content">
+        
+        <div class="control-group">
+            <label>Fish Count (<span id="fishCount-val">15</span>)</label>
+            <input type="range" id="fishCount" min="5" max="50" step="1" value="15">
+        </div>
+        
+        <div class="control-group">
+            <label>Fish Size Multiplier (<span id="fishSize-val">1</span>)</label>
+            <input type="range" id="fishSize" min="0.5" max="3" step="0.1" value="1">
+        </div>
+        
+        <div class="control-group">
+            <label>Fish Speed Multiplier (<span id="fishSpeed-val">1.5</span>)</label>
+            <input type="range" id="fishSpeed" min="0.5" max="3" step="0.1" value="1.5">
+        </div>
+
+        <div class="control-group">
+            <label>Water Color Hue (<span id="waterHue-val">195</span>)</label>
+            <input type="range" id="waterHue" min="0" max="360" step="1" value="195">
+        </div>
+
+        <div class="control-group">
+            <label>Ripple Strength (<span id="rippleStrength-val">1</span>)</label>
+            <input type="range" id="rippleStrength" min="0.1" max="5" step="0.1" value="1">
+        </div>
+        
+        <div class="control-group">
+            <label>Fish Color Theme</label>
+            <select id="fishTheme">
+                <option value="0" selected>Traditional</option>
+                <option value="1">Neon</option>
+                <option value="2">Monochrome</option>
+            </select>
+        </div>
+        
+        <div class="control-group checkbox-group">
+            <label>
+                <input type="checkbox" id="enableCaustics" checked> Enable Light Caustics
+            </label>
+        </div>
+
+        <div class="control-group checkbox-group">
+            <label>
+                <input type="checkbox" id="enableFeeding" checked> Enable Feeding on Click
+            </label>
+        </div>
+
+        <div class="control-group checkbox-group">
+            <label>
+                <input type="checkbox" id="shyFish" checked> Fish Avoid Cursor (Shy)
+            </label>
+        </div>
+        </div>
+    </div>
+
+    <!-- Load Core Physics Engine from parent folder -->
+    <script src="../script.js"></script>
+    <!-- Load Demo UI Logic -->
+    <script src="demo.js"></script>
+</body>
+</html>
