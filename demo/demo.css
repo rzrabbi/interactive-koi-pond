@@ -19,9 +19,11 @@ body {
     color: #ffffff;
     z-index: 100;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-    max-height: calc(100vh - 40px);
+    max-height: calc(100vh - 120px);
     overflow-y: auto;
     transition: transform 0.3s ease;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
 
 /* Scrollbar for panel */
@@ -72,6 +74,11 @@ body {
 .header-buttons button:hover {
     background: rgba(255, 255, 255, 0.2);
     transform: scale(1.05);
+}
+
+.header-buttons button:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
 }
 
 .minimized #panel-content {
@@ -132,8 +139,38 @@ input[type="range"]::-webkit-slider-runnable-track {
     border-radius: 2px;
 }
 
+/* Firefox Slider Support */
+input[type="range"]::-moz-range-thumb {
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #ffffff;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    transition: transform 0.1s;
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+    transform: scale(1.2);
+}
+
+input[type="range"]::-moz-range-track {
+    width: 100%;
+    height: 4px;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+}
+
 input[type="range"]:focus {
     outline: none;
+}
+
+input[type="range"]:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
+    border-radius: 2px;
 }
 
 /* Dropdown */
@@ -148,6 +185,11 @@ select {
     font-family: 'Inter', sans-serif;
     cursor: pointer;
     outline: none;
+}
+
+select:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
 }
 select option {
     background: #1a1f2b;
@@ -176,6 +218,11 @@ input[type="checkbox"] {
     place-content: center;
     cursor: pointer;
     transition: all 0.2s ease;
+}
+
+input[type="checkbox"]:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
 }
 
 input[type="checkbox"]::before {
@@ -211,4 +258,120 @@ input[type="checkbox"]:checked::before {
         border-right: none;
         border-bottom: none;
     }
+}
+
+/* Action Bar */
+#action-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 12px 0 0 0;
+    padding-bottom: env(safe-area-inset-bottom);
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    z-index: 1000;
+    box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.5);
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 28px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.btn:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
+}
+
+.btn svg {
+    margin-top: -2px;
+}
+
+/* Steam Workshop Button */
+.steam-btn {
+    background: linear-gradient(135deg, #1b2838 0%, #2a475e 100%);
+    color: #66c0f4;
+    border: 1px solid #171a21;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.steam-btn:hover {
+    background: linear-gradient(135deg, #2a475e 0%, #1b2838 100%);
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(42, 71, 94, 0.6);
+}
+
+/* Download Button */
+.download-btn {
+    background: linear-gradient(135deg, #00adb5 0%, #007f86 100%);
+    color: #ffffff;
+    border: 1px solid #005a5f;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.download-btn:hover {
+    background: linear-gradient(135deg, #00d2fc 0%, #00adb5 100%);
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 173, 181, 0.6);
+}
+
+/* Mobile Adjustments for Action Bar */
+@media (max-width: 768px) {
+    #action-bar {
+        height: auto;
+        padding: 12px 12px 8px 12px;
+        padding-bottom: calc(8px + env(safe-area-inset-bottom));
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .stats-text {
+        display: none;
+    }
+    
+    #ui-panel {
+        max-height: calc(100vh - 160px);
+        bottom: 140px; /* Above the stacked action bar */
+        border-radius: 16px;
+    }
+}
+
+.action-btn-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.stats-text {
+    font-size: 11px; /* Exact pixels prevent fractional clipping */
+    font-family: system-ui, -apple-system, sans-serif; /* Sharpest rendering at tiny sizes */
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 400;
+    letter-spacing: 0.2px;
+    line-height: 14px;
+    padding-bottom: 4px; /* Gives exactly 4 pixels for descenders, no more */
+    display: inline-block;
+    margin: 0;
 }
