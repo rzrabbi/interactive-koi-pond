@@ -1,25 +1,9 @@
 # Interactive Koi Pond 🐟
 
-<p align="center">
-  <strong>An interactive, deeply relaxing Koi Pond live wallpaper for Wallpaper Engine and Lively Wallpaper.</strong><br>
-  <em>Move your cursor to create ripples, watch the fish scatter, or click to feed them!</em>
-</p>
+An interactive, deeply relaxing Koi Pond live wallpaper for Wallpaper Engine and Lively Wallpaper. Move your cursor to create ripples, watch the fish scatter, or click to feed them!
 
-<p align="center">
-  <a href="https://rzrabbi.github.io/interactive-koi-pond/demo/">
-    <img src="https://img.shields.io/badge/Live%20Demo-Try%20it%20Now-00adb5?style=for-the-badge&logo=html5&logoColor=white" alt="Live Demo" />
-  </a>
-  &nbsp;&nbsp;
-  <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=3692215641">
-    <img src="https://img.shields.io/badge/Steam%20Workshop-Subscribe-1b2838?style=for-the-badge&logo=steam&logoColor=white" alt="Steam Workshop" />
-  </a>
-</p>
-
-<p align="center">
-  <img src="preview.gif" alt="Interactive Koi Pond Preview" width="100%" style="border-radius: 8px; max-width: 750px;" />
-</p>
-
----
+[![Workshop Subscription](https://img.shields.io/steam/subscriptions/3692215641?style=flat&logo=steam&label=Workshop%20Subscription)](https://steamcommunity.com/sharedfiles/filedetails/?id=3692215641)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Try%20it%20Now-00adb5?style=flat&logo=html5&logoColor=white)](https://rzrabbi.github.io/interactive-koi-pond/demo/)
 
 ## 🌟 Features
 
@@ -63,7 +47,7 @@ git clone https://github.com/rzrabbi/interactive-koi-pond.git
 ```
 
 2. Open Wallpaper Engine.
-3. Click **Open Wallpaper** in the bottom-left corner.
+3. Click **Open Wallpaper in the bottom-left corner.**
 4. Select **Open offline wallpaper (animated)**.
 5. Choose **Create new wallpaper**.
 6. Navigate to the cloned repository.
