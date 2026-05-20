@@ -438,7 +438,15 @@ function render(currentTime) {
 
 requestAnimationFrame(render);
 
+// ---------------------------------------------------------
 // Lively Wallpaper Support
+// 
+// Note: If you acquired this code from the Steam Workshop / Wallpaper Engine build,
+// the required 'LivelyProperties.json' file is not bundled with it.
+// To use this project seamlessly on Lively Wallpaper, please download the necessary
+// configuration files directly from the official GitHub repository:
+// 👉 https://github.com/rzrabbi/interactive-koi-pond
+// ---------------------------------------------------------
 function livelyPropertyListener(name, val) {
     const props = {};
     props[name] = { value: val };

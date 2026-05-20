@@ -1,11 +1,25 @@
 # Interactive Koi Pond 🐟
 
-An interactive, deeply relaxing Koi Pond live wallpaper for Wallpaper Engine and Lively Wallpaper. Move your cursor to create ripples, watch the fish scatter, or click to feed them!
+<p align="center">
+  <strong>An interactive, deeply relaxing Koi Pond live wallpaper for Wallpaper Engine and Lively Wallpaper.</strong><br>
+  <em>Move your cursor to create ripples, watch the fish scatter, or click to feed them!</em>
+</p>
 
-[![Workshop Subscription](https://img.shields.io/steam/subscriptions/3692215641?style=flat&logo=steam&label=Workshop%20Subscription)](https://steamcommunity.com/sharedfiles/filedetails/?id=3692215641)
+<p align="center">
+  <a href="https://rzrabbi.github.io/interactive-koi-pond/demo/">
+    <img src="https://img.shields.io/badge/Live%20Demo-Try%20it%20Now-00adb5?style=for-the-badge&logo=html5&logoColor=white" alt="Live Demo" />
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=3692215641">
+    <img src="https://img.shields.io/badge/Steam%20Workshop-Subscribe-1b2838?style=for-the-badge&logo=steam&logoColor=white" alt="Steam Workshop" />
+  </a>
+</p>
 
+<p align="center">
+  <img src="preview.gif" alt="Interactive Koi Pond Preview" width="100%" style="border-radius: 8px; max-width: 750px;" />
+</p>
 
-**🖼️ [Live Demo](https://rzrabbi.github.io/interactive-koi-pond/demo/)**
+---
 
 ## 🌟 Features
 
@@ -89,8 +103,18 @@ git clone https://github.com/rzrabbi/interactive-koi-pond.git
 7. Apply the wallpaper and enjoy.
 
 
+## 🛠️ Architecture
+
+A unified bridge architecture is utilized to support Wallpaper Engine, Lively Wallpaper, and the Web Demo through a single core engine.
+
+- **Core Engine:** `script.js` natively listens to the Wallpaper Engine API format (`window.wallpaperPropertyListener.applyUserProperties`).
+- **Lively Wallpaper Proxy:** The `livelyPropertyListener` function intercepts data, formats it into a Wallpaper Engine object, and pipes it into the core listener.
+- **Web Demo UI:** Standard HTML inputs (`/demo/demo.js`) are packaged into Wallpaper Engine objects and piped directly into the core listener.
+
+Updates made to `script.js` are automatically applied across all platforms.
+
+---
 
 ## 📜 License
 
 This project is licensed under the MIT License.
-

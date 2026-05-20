@@ -1,0 +1,14 @@
+{
+  "AppVersion": "1.0.0.0",
+  "Title": "Koi Pond",
+  "Thumbnail": "LivelyThumbnail.jpg",
+  "Preview": "LivelyPreview.gif",
+  "Desc": "An interactive, deeply relaxing Koi Pond",
+  "Author": "Rezaye Rabbi",
+  "License": "MIT",
+  "Contact": "https://github.com/rzrabbi/interactive-koi-pond",
+  "Type": 1,
+  "FileName": "index.html",
+  "Arguments": null,
+  "IsAbsolutePath": false
+}

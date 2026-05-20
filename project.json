@@ -9,7 +9,7 @@
 			"enableCaustics" : 
 			{
 				"index" : 5,
-				"order" : 105,
+				"order" : 106,
 				"text" : "Enable Light Caustics",
 				"type" : "bool",
 				"value" : true
@@ -37,7 +37,7 @@
 				"index" : 2,
 				"max" : 3,
 				"min" : 0.5,
-				"order" : 102,
+				"order" : 101,
 				"text" : "Fish Size Multiplier",
 				"type" : "slider",
 				"value" : 1
@@ -47,7 +47,7 @@
 				"index" : 3,
 				"max" : 3,
 				"min" : 0.5,
-				"order" : 103,
+				"order" : 102,
 				"text" : "Fish Speed Multiplier",
 				"type" : "slider",
 				"value" : 1.5
@@ -70,7 +70,7 @@
 						"value" : 2
 					}
 				],
-				"order" : 101,
+				"order" : 105,
 				"text" : "Fish Color Theme",
 				"type" : "combo",
 				"value" : 0
@@ -80,7 +80,7 @@
 				"index" : 6,
 				"max" : 5,
 				"min" : 0.1,
-				"order" : 106,
+				"order" : 104,
 				"text" : "Ripple Strength",
 				"type" : "slider",
 				"value" : 1
@@ -105,7 +105,7 @@
 				"index" : 4,
 				"max" : 360,
 				"min" : 0,
-				"order" : 104,
+				"order" : 103,
 				"text" : "Water Color Hue",
 				"type" : "slider",
 				"value" : 195
