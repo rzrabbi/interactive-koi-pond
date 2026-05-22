@@ -11,6 +11,9 @@ sliders.forEach(id => {
     const el = document.getElementById(id);
     const valDisplay = document.getElementById(`${id}-val`);
     
+    // Sync initial state from DOM to engine (handles browser cache restores)
+    updateWallpaperProperty(id, parseFloat(el.value));
+    
     el.addEventListener('input', (e) => {
         const val = parseFloat(e.target.value);
         valDisplay.textContent = val;
@@ -20,6 +23,7 @@ sliders.forEach(id => {
 
 // Bind Dropdown
 const themeSelect = document.getElementById('fishTheme');
+updateWallpaperProperty('fishTheme', parseInt(themeSelect.value));
 themeSelect.addEventListener('change', (e) => {
     updateWallpaperProperty('fishTheme', parseInt(e.target.value));
 });
@@ -28,6 +32,7 @@ themeSelect.addEventListener('change', (e) => {
 const checkboxes = ['enableCaustics', 'enableFeeding', 'shyFish'];
 checkboxes.forEach(id => {
     const el = document.getElementById(id);
+    updateWallpaperProperty(id, el.checked);
     el.addEventListener('change', (e) => {
         updateWallpaperProperty(id, e.target.checked);
     });
@@ -45,12 +50,56 @@ fullscreenBtn.addEventListener('click', () => {
     }
 });
 
-// Update fullscreen button icon based on state
+// Global Keyboard Shortcuts
+document.addEventListener('keydown', (e) => {
+    // Ignore text input fields if any are added in the future
+    if (e.target.tagName === 'INPUT') {
+        const type = e.target.type;
+        if (type === 'text' || type === 'password' || type === 'email' || type === 'search' || type === 'number') {
+            return;
+        }
+    }
+    if (e.target.tagName === 'TEXTAREA') return;
+    
+    // Toggle UI visibility with 'M' key
+    if (e.key.toLowerCase() === 'm') {
+        document.body.classList.toggle('ui-hidden');
+    }
+});
+
+// Update fullscreen button icon and UI visibility based on state
+let promptTimeout;
 document.addEventListener('fullscreenchange', () => {
     if (document.fullscreenElement) {
+        document.body.classList.add('is-fullscreen');
+        
+        const isDesktop = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+        
+        // Only auto-hide UI on desktop
+        if (isDesktop) {
+            document.body.classList.add('ui-hidden');
+        }
+        
+        // Show the prompt
+        const prompt = document.getElementById('fullscreen-prompt');
+        if (prompt) {
+            if (isDesktop) {
+                prompt.innerHTML = 'Press Esc to exit fullscreen<br><span style="font-size: 0.9rem; color: #ddd;">Press M to toggle menu</span>';
+            } else {
+                prompt.innerHTML = 'Swipe from edge to exit fullscreen';
+            }
+            prompt.classList.add('show');
+            clearTimeout(promptTimeout);
+            promptTimeout = setTimeout(() => {
+                prompt.classList.remove('show');
+            }, 4000);
+        }
+
         fullscreenBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path></svg>'; // Exit fullscreen icon
         fullscreenBtn.title = 'Exit Fullscreen';
     } else {
+        document.body.classList.remove('is-fullscreen');
+        document.body.classList.remove('ui-hidden'); // Always restore UI on exit
         fullscreenBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>'; // Enter fullscreen icon
         fullscreenBtn.title = 'Toggle Fullscreen';
     }
