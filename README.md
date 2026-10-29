@@ -1,3 +1,5 @@
+<div align="center">
+
 # Interactive Koi Pond 🐟
 
 An interactive, deeply relaxing Koi Pond live wallpaper for [Wallpaper Engine](https://www.wallpaperengine.io/en) and [Lively Wallpaper](https://www.rocksdanister.com/lively/). Move your cursor to create ripples, watch the fish scatter, or click to feed them!
@@ -5,6 +7,14 @@ An interactive, deeply relaxing Koi Pond live wallpaper for [Wallpaper Engine](h
 [![Workshop Subscription](https://img.shields.io/steam/subscriptions/3692215641?style=flat&logo=steam&label=Workshop%20Subscription)](https://steamcommunity.com/sharedfiles/filedetails/?id=3692215641)
 [![GitHub Downloads](https://img.shields.io/github/downloads/rzrabbi/interactive-koi-pond/total?style=flat&logo=github&label=Downloads)](https://github.com/rzrabbi/interactive-koi-pond/releases)
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Try%20it%20Now-00adb5?style=flat&logo=html5&logoColor=white)](https://rzrabbi.github.io/interactive-koi-pond/demo/)
+
+<br>
+
+<a href="https://rzrabbi.github.io/interactive-koi-pond/demo/">
+  <img src="LivelyPreview.gif" alt="Open the interactive Koi Pond live demo" width="800">
+</a>
+
+</div>
 
 ## 🌟 Features
 
