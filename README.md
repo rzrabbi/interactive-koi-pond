@@ -11,7 +11,7 @@ An interactive, deeply relaxing Koi Pond live wallpaper for [Wallpaper Engine](h
 <br>
 
 <a href="https://rzrabbi.github.io/interactive-koi-pond/demo/">
-  <img src="LivelyPreview.gif" alt="Open the interactive Koi Pond live demo" width="800">
+  <img src="LivelyPreview.gif" alt="Open the interactive Koi Pond live demo">
 </a>
 
 </div>
