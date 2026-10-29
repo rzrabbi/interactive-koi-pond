@@ -53,7 +53,20 @@ window.addEventListener('click', (e) => {
     ripples.push(new Ripple(e.clientX, e.clientY, 1.5 * config.rippleStrength));
 });
 
+// FPS cap in frames per second. 0 = uncapped (monitor refresh rate).
+// Wallpaper Engine sets this via applyGeneralProperties.
+let fpsLimit = 0;
+let fpsAccumulator = 0;
+let elapsedSinceRender = 0;
+
 window.wallpaperPropertyListener = {
+    applyGeneralProperties: function(properties) {
+        if (properties.fps !== undefined) {
+            const value = Number(properties.fps);
+            fpsLimit = Number.isFinite(value) && value > 0 ? value : 0;
+            fpsAccumulator = 0;
+        }
+    },
     applyUserProperties: function(properties) {
         if (properties.fishCount !== undefined) {
             config.fishCount = properties.fishCount.value;
@@ -402,12 +415,31 @@ function drawCaustics(dt) {
 let lastTime = performance.now();
 
 function render(currentTime) {
+    requestAnimationFrame(render);
     if (!currentTime) currentTime = performance.now();
-    let dt = (currentTime - lastTime) / 1000;
+
+    let frameDt = (currentTime - lastTime) / 1000;
     lastTime = currentTime;
-    
+
     // Cap dt to prevent massive jumps if tab is inactive
-    if (dt > 0.1) dt = 0.1;
+    if (frameDt > 0.1) frameDt = 0.1;
+
+    elapsedSinceRender += frameDt;
+
+    // Wallpaper Engine supplies its global FPS setting. Other hosts (including
+    // Lively and the web demo) leave this at 0 and render at the display rate.
+    if (fpsLimit > 0) {
+        const frameInterval = 1 / fpsLimit;
+        fpsAccumulator += frameDt;
+        if (fpsAccumulator < frameInterval) return;
+
+        // Keep fractional time so limits such as 30 FPS on a 144 Hz display
+        // alternate frame intervals instead of drifting below the requested rate.
+        fpsAccumulator %= frameInterval;
+    }
+
+    let dt = Math.min(elapsedSinceRender, 0.1);
+    elapsedSinceRender = 0;
 
     ctx.clearRect(0, 0, width, height);
 
@@ -432,8 +464,6 @@ function render(currentTime) {
         ripples[i].draw(ctx);
         if (ripples[i].life <= 0) ripples.splice(i, 1);
     }
-
-    requestAnimationFrame(render);
 }
 
 requestAnimationFrame(render);
